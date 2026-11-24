@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Pencatatan Data Mahasiswa — Gita Angriany</title>
+  <!-- Memuat Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Memuat Font Inter dari Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    // Konfigurasi tema dan warna kustom Tailwind CSS
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            navyPrimary: '#1e3a8a',
+            navyDark: '#172554',
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-[#dbeafe] via-[#e0f2fe] to-[#e0f2fe] text-slate-800 font-sans antialiased py-10 px-4 sm:px-6">
+
+  <!-- Container Utama -->
+  <div class="max-w-4xl mx-auto space-y-7">
+
+    <!-- Bagian Header Terpusat (Tanpa Bar Latar Gelap) -->
+    <header class="text-center space-y-2.5 px-2">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e3a8a] tracking-tight">
+        Portal Pencatatan Data Mahasiswa — Gita Angriany
+      </h1>
+      <p class="text-sm sm:text-base text-[#334155] font-normal">
+        Lengkapi formulir biodata di bawah ini untuk menambah data ke dalam tabel rekapitulasi
+      </p>
+    </header>
+
+    <!-- Panel Pertama: Kartu Formulir Biodata Mahasiswa -->
+    <section class="bg-white rounded-2xl shadow-lg shadow-blue-900/5 border border-white/80 p-6 sm:p-9 transition-all">
+      <h2 class="text-lg sm:text-xl font-bold text-slate-900 text-center mb-7">
+        Formulir Biodata Mahasiswa
+      </h2>
+
+      <!-- Notifikasi Umpan Balik (Pengganti alert) -->
+      <div id="notifikasiToast" class="hidden mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center justify-between transition-all" role="status" aria-live="polite">
+        <span id="pesanNotifikasi">Data mahasiswa berhasil ditambahkan ke tabel rekapitulasi!</span>
+        <button type="button" onclick="tutupNotifikasi()" aria-label="Tutup notifikasi" class="text-emerald-600 hover:text-emerald-900 font-bold px-2">&times;</button>
+      </div>
+
+      <!-- Formulir Dua Kolom Horizontal pada Layar Menengah ke Atas -->
+      <form id="formMahasiswa" class="space-y-5">
+
+        <!-- Baris 1: Nama Lengkap -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 items-center">
+          <label for="nama" class="md:col-span-4 text-sm font-semibold text-slate-800">
+            Nama Lengkap
+          </label>
+          <div class="md:col-span-8">
+            <input
+              type="text"
+              id="nama"
+              name="nama"
+              placeholder="Masukkan nama lengkap"
+              required
+              class="w-full px-4 py-2.5 text-sm text-slate-800 bg-white border border-slate-300 rounded-lg placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]/25 focus:border-[#1e3a8a] transition"
+            >
+          </div>
+        </div>
+
+        <!-- Baris 2: Tempat, Tanggal Lahir -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 items-center">
+          <label for="ttl" class="md:col-span-4 text-sm font-semibold text-slate-800">
+            Tempat, Tanggal Lahir
+          </label>
+          <div class="md:col-span-8">
+            <input
+              type="text"
+              id="ttl"
+              name="ttl"
+              placeholder="Contoh: Bungo, 14-08-2005"
+              required
+              class="w-full px-4 py-2.5 text-sm text-slate-800 bg-white border border-slate-300 rounded-lg placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]/25 focus:border-[#1e3a8a] transition"
+            >
+          </div>
+        </div>
+
+        <!-- Baris 3: Jenis Kelamin -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 items-center">
+          <label for="gender" class="md:col-span-4 text-sm font-semibold text-slate-800">
+            Jenis Kelamin
+          </label>
+          <div class="md:col-span-8">
+            <select
+              id="gender"
+              name="gender"
+              required
+              class="w-full px-4 py-2.5 text-sm text-slate-800 bg-slate-100/80 border border-slate-300 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]/25 focus:border-[#1e3a8a] transition cursor-pointer"
+            >
+              <option value="">-- Pilih Jenis Kelamin --</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Baris 4: Alamat Domisili -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 items-start">
+          <label for="alamat" class="md:col-span-4 text-sm font-semibold text-slate-800 md:pt-2.5">
+            Alamat Domisili
+          </label>
+          <div class="md:col-span-8">
+            <textarea
+              id="alamat"
+              name="alamat"
+              rows="3"
+              placeholder="Masukkan alamat lengkap"
+              required
+              class="w-full px-4 py-2.5 text-sm text-slate-800 bg-white border border-slate-300 rounded-lg placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1e3a8a]/25 focus:border-[#1e3a8a] transition resize-y"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Baris 5: Tombol Simpan Sejajar dengan Kolom Input -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 pt-1">
+          <div class="hidden md:block md:col-span-4"></div>
+          <div class="md:col-span-8">
+            <button
+              type="submit"
+              class="w-full bg-[#1e3a8a] hover:bg-[#1d4ed8] active:scale-[0.99] text-white font-semibold text-sm py-3 px-6 rounded-lg shadow-sm transition-all duration-200 cursor-pointer"
+            >
+              Simpan ke Rekap Tabel
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Panel Kedua: Kartu Tabel Rekapitulasi Data Mahasiswa -->
+    <section class="bg-white rounded-2xl shadow-lg shadow-blue-900/5 border border-white/80 p-6 sm:p-9">
+      <h2 class="text-lg sm:text-xl font-bold text-slate-900 text-center mb-6">
+        Tabel Rekapitulasi Data Mahasiswa
+      </h2>
+
+      <!-- Wrapper Responsif agar Tabel tidak terpotong di Layar Kecil -->
+      <div class="overflow-x-auto rounded-lg border border-slate-200">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#172554] text-white text-sm">
+              <th class="py-3 px-4 font-semibold whitespace-nowrap">Nama Lengkap</th>
+              <th class="py-3 px-4 font-semibold whitespace-nowrap">Tempat, Tanggal Lahir</th>
+              <th class="py-3 px-4 font-semibold whitespace-nowrap">Jenis Kelamin</th>
+              <th class="py-3 px-4 font-semibold whitespace-nowrap">Alamat Domisili</th>
+            </tr>
+          </thead>
+          <tbody id="tabelRekap" class="divide-y divide-slate-200 text-sm text-slate-800">
+            <!-- Baris Data Contoh 1 -->
+            <tr class="bg-[#dbeafe]/60 hover:bg-blue-100/70 transition-colors">
+              <td class="py-3 px-4 font-medium">Gita Angriany</td>
+              <td class="py-3 px-4">Bungo, 14-08-2005</td>
+              <td class="py-3 px-4">Perempuan</td>
+              <td class="py-3 px-4">Muara Bungo, Jambi</td>
+            </tr>
+            <!-- Baris Data Contoh 2 -->
+            <tr class="bg-[#f3f0ec]/70 hover:bg-slate-100 transition-colors">
+              <td class="py-3 px-4 font-medium">Ahmad Fauzan</td>
+              <td class="py-3 px-4">Padang, 01-01-2004</td>
+              <td class="py-3 px-4">Laki-laki</td>
+              <td class="py-3 px-4">Padang, Sumatera Barat</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Logika Interaktif JavaScript (Client-Side DOM Manipulation) -->
+  <script>
+    // Referensi elemen DOM utama
+    const formMahasiswa = document.getElementById('formMahasiswa');
+    const tabelRekap = document.getElementById('tabelRekap');
+    const notifikasiToast = document.getElementById('notifikasiToast');
+    const pesanNotifikasi = document.getElementById('pesanNotifikasi');
+    let timerNotifikasi;
+
+    /**
+     * Menampilkan notifikasi toast selama 4 detik setelah data ditambahkan.
+     * @param {string} namaMhs - Nama mahasiswa yang baru disimpan.
+     */
+    function tampilkanNotifikasi(namaMhs) {
+      try {
+        clearTimeout(timerNotifikasi);
+        pesanNotifikasi.textContent = `Data "${namaMhs}" berhasil ditambahkan ke dalam tabel rekapitulasi.`;
+        notifikasiToast.classList.remove('hidden');
+        timerNotifikasi = setTimeout(() => {
+          notifikasiToast.classList.add('hidden');
+        }, 4000);
+      } catch (error) {
+        console.error('Gagal menampilkan notifikasi:', error);
+      }
+    }
+
+    /**
+     * Menyembunyikan notifikasi toast secara manual.
+     */
+    function tutupNotifikasi() {
+      notifikasiToast.classList.add('hidden');
+      clearTimeout(timerNotifikasi);
+    }
+
+    // Menangani pengiriman formulir biodata mahasiswa
+    formMahasiswa.addEventListener('submit', function(event) {
+      // Mencegah reload halaman bawaan form
+      event.preventDefault();
+
+      try {
+        // Mengambil dan membersihkan spasi berlebih pada nilai input
+        const nama = document.getElementById('nama').value.trim();
+        const ttl = document.getElementById('ttl').value.trim();
+        const gender = document.getElementById('gender').value;
+        const alamat = document.getElementById('alamat').value.trim();
+
+        if (!nama || !ttl || !gender || !alamat) {
+          return;
+        }
+
+        // Menentukan warna baris selang-seling agar konsisten dengan contoh
+        const jumlahBarisSaatIni = tabelRekap.rows.length;
+        const barisBaru = document.createElement('tr');
+        barisBaru.className = jumlahBarisSaatIni % 2 === 0
+          ? 'bg-[#dbeafe]/60 hover:bg-blue-100/70 transition-colors'
+          : 'bg-[#f3f0ec]/70 hover:bg-slate-100 transition-colors';
+
+        // Membuat dan mengisi 4 sel kolom (<td>)
+        const dataKolom = [nama, ttl, gender, alamat];
+        dataKolom.forEach((nilai, indeks) => {
+          const sel = document.createElement('td');
+          sel.className = indeks === 0 ? 'py-3 px-4 font-medium' : 'py-3 px-4';
+          sel.textContent = nilai;
+          barisBaru.appendChild(sel);
+        });
+
+        // Menyisipkan baris baru ke bagian bawah tabel rekapitulasi
+        tabelRekap.appendChild(barisBaru);
+
+        // Menampilkan umpan balik sukses & mereset formulir
+        tampilkanNotifikasi(nama);
+        formMahasiswa.reset();
+      } catch (error) {
+        console.error('Terjadi kesalahan saat menyimpan data mahasiswa:', error);
+      }
+    });
+  </script>
+</body>
+</html
